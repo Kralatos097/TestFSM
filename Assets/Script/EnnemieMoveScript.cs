@@ -5,21 +5,27 @@ using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.AI;
 using Debug = UnityEngine.Debug;
+using Random = UnityEngine.Random;
 
 public class EnnemieMoveScript : MonoBehaviour
 {
     public ChampDeVisionScript champDeVision;
     public Transform player;
     public NavMeshAgent nMagent;
-    
+    //public WaypointScript WaypointScript;
+
     private CurrentState _currentState;
     private CurrentState cCurrentState;
+    private List<Transform> WaypointList;
+    private int lastPoint = -1;
+    private int preLastPoint = -1;
 
     // Start is called before the first frame update
     void Start()
     {
         _currentState = CurrentState.Idle;
         cCurrentState = CurrentState.Search;
+        WaypointList = WaypointScript.Waypoints;
     }
 
     // Update is called once per frame
@@ -52,7 +58,7 @@ public class EnnemieMoveScript : MonoBehaviour
                 {
                     _currentState = CurrentState.Chase;
                 }
-                Invoke("SwitchToIdle", 5);
+                Invoke("SwitchToIdle", 20);
                 break;
         }
 
@@ -66,24 +72,49 @@ public class EnnemieMoveScript : MonoBehaviour
     private void Idle()
     {
         nMagent.speed = 7.5f;
-        gameObject.transform.Rotate(0, 0.1f,0);
+        //gameObject.transform.Rotate(0, 0.1f,0);
+
+        MoveAround();
     }
 
     private void Chase()
     {
         nMagent.speed = 20;
-        GetComponent<MoveTo>().Chase();
+        GetComponent<MoveTo>().MoveToGoal();
     }
 
     private void Search()
     {
         nMagent.speed = 15;
         
+        MoveAround();
+    }
+
+    private void MoveAround()
+    {
+        if (!nMagent.hasPath)
+        {
+            Debug.Log(WaypointList.Count);
+            int ind = Random.Range(0, WaypointList.Count);
+            while(lastPoint == ind || preLastPoint == ind)
+            {
+                ind = Random.Range(0, WaypointList.Count);
+            }
+            preLastPoint = lastPoint;
+            lastPoint = ind;
+            
+            Debug.Log("-> " + preLastPoint + " ---- " + lastPoint);
+                    
+            Transform dest = WaypointScript.Waypoints[ind];
+                    
+            //Debug.Log("--> " + dest.position);
+            GetComponent<MoveTo>().MoveToPoint(dest.position);
+        }
     }
 
     private void SwitchToIdle()
     {
-        _currentState = CurrentState.Idle;
+        if(_currentState == CurrentState.Search) _currentState = CurrentState.Idle;
     }
 }
 

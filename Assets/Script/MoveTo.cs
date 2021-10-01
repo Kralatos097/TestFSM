@@ -13,8 +13,13 @@ public class MoveTo : MonoBehaviour {
           _agent = GetComponent<NavMeshAgent>();
        }
 
-       public void Chase()
+       public void MoveToGoal()
        {
            _agent.destination = goal.position;
+       }
+       
+       public void MoveToPoint(Vector3 point)
+       {
+           _agent.destination = point;
        }
 }

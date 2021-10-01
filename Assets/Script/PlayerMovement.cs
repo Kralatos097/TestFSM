@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -23,5 +25,18 @@ public class PlayerMovement : MonoBehaviour
 
         rbPlayer.velocity = vel * speed * Time.deltaTime;
         
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Ennemies"))
+        {
+            Death();
+        }
+    }
+
+    private void Death()
+    {
+        Debug.Log("Death");
     }
 }

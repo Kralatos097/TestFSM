@@ -56,6 +56,7 @@
      <Compile Include="Assets\Script\ChampDeVisionScript.cs" />
      <Compile Include="Assets\Script\MoveTo.cs" />
      <Compile Include="Assets\Script\EnnemieMoveScript.cs" />
+     <Compile Include="Assets\Script\WaypointScript.cs" />
  <Reference Include="UnityEngine">
  <HintPath>C:/Applications/Unity/2020.3.18f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>
