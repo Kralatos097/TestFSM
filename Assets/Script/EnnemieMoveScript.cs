@@ -12,13 +12,14 @@ public class EnnemieMoveScript : MonoBehaviour
     public ChampDeVisionScript champDeVision;
     public Transform player;
     public NavMeshAgent nMagent;
-    //public WaypointScript WaypointScript;
+    public Material material;
 
     private CurrentState _currentState;
     private CurrentState cCurrentState;
     private List<Transform> WaypointList;
     private int lastPoint = 0;
     private int preLastPoint = 0;
+    private bool didGuard = true;
 
     // Start is called before the first frame update
     void Start()
@@ -43,7 +44,7 @@ public class EnnemieMoveScript : MonoBehaviour
             
             case CurrentState.Chase :
                 Chase();
-                if (Vector3.Distance(transform.position, player.position) > 17)
+                if (Vector3.Distance(transform.position, player.position) > 15)
                 {
                     _currentState = CurrentState.Search;
                 }
@@ -88,31 +89,44 @@ public class EnnemieMoveScript : MonoBehaviour
 
     private void Idle()
     {
-        nMagent.speed = 7.5f;
+        if (!nMagent.hasPath && !didGuard)
+        {
+            _currentState = CurrentState.Guard;
+            didGuard = true;
+        }
+        else
+        {
+            material.color = Color.yellow;
+            nMagent.speed = 7.5f;
 
-        MoveAround();
-        _currentState = CurrentState.Guard;
+            MoveAround();
+            didGuard = false;
+        }
     }
 
     private void Chase()
     {
+        material.color = Color.red;
         CancelInvoke();
-        nMagent.speed = 15;
+        nMagent.speed = 10;
         GetComponent<MoveTo>().MoveToGoal();
     }
 
     private void Search()
     {
-        nMagent.speed = 15;
+        material.color = new Color(255, 127, 0);
+        nMagent.speed = 10;
         
         MoveAround();
     }
 
     private void Guard()
     {
+        material.color = new Color(255,0,127);
+        
         if (!nMagent.hasPath)
         {
-            gameObject.transform.Rotate(0, 0.3f, 0);
+            gameObject.transform.Rotate(0, 2f, 0);
             Invoke("SwitchToIdle", 3);
         }
         else

@@ -98,7 +98,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.75
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!195 &5178984340736035992
 NavMeshAgent:
@@ -137,6 +137,7 @@ MonoBehaviour:
   champDeVision: {fileID: 5178984341340657371}
   player: {fileID: 0}
   nMagent: {fileID: 5178984340736035992}
+  material: {fileID: 2100000, guid: 7586716b21131ce43acc08c1da34f31f, type: 2}
 --- !u!114 &5178984340736035993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,10 +252,10 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 0.9943339, b: 0.6933962, a: 1}
-  m_Intensity: 20
-  m_Range: 10.776882
-  m_SpotAngle: 40
-  m_InnerSpotAngle: 4
+  m_Intensity: 25
+  m_Range: 12
+  m_SpotAngle: 45
+  m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
     m_Type: 1
@@ -293,7 +294,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 5
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}

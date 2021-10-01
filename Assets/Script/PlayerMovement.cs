@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public int speed;
+    public float speed;
     public Rigidbody rbPlayer;
     public UIScript UIScript;
 
