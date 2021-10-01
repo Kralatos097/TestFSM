@@ -17,8 +17,8 @@ public class EnnemieMoveScript : MonoBehaviour
     private CurrentState _currentState;
     private CurrentState cCurrentState;
     private List<Transform> WaypointList;
-    private int lastPoint = -1;
-    private int preLastPoint = -1;
+    private int lastPoint = 0;
+    private int preLastPoint = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -35,12 +35,9 @@ public class EnnemieMoveScript : MonoBehaviour
         {
             case CurrentState.Idle :
                 Idle();
-                if (champDeVision.triggered == true)
+                if (DetectPlayer() == true)
                 {
-                    if (!Physics.Linecast(transform.position, player.position, layerMask:3))
-                    {
-                        _currentState = CurrentState.Chase;
-                    }
+                    _currentState = CurrentState.Chase;
                 }
                 break;
             
@@ -54,11 +51,19 @@ public class EnnemieMoveScript : MonoBehaviour
             
             case CurrentState.Search :
                 Search();
-                if (champDeVision.triggered == true)
+                if (DetectPlayer() == true)
                 {
                     _currentState = CurrentState.Chase;
                 }
                 Invoke("SwitchToIdle", 20);
+                break;
+            
+            case CurrentState.Guard :
+                Guard();
+                if (DetectPlayer() == true)
+                {
+                    _currentState = CurrentState.Chase;
+                }
                 break;
         }
 
@@ -69,17 +74,30 @@ public class EnnemieMoveScript : MonoBehaviour
         }
     }
 
+    private bool DetectPlayer()
+    {
+        if (champDeVision.triggered == true)
+        {
+            if (!Physics.Linecast(transform.position, player.position, layerMask:3))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void Idle()
     {
         nMagent.speed = 7.5f;
-        //gameObject.transform.Rotate(0, 0.1f,0);
 
         MoveAround();
+        _currentState = CurrentState.Guard;
     }
 
     private void Chase()
     {
-        nMagent.speed = 20;
+        CancelInvoke();
+        nMagent.speed = 15;
         GetComponent<MoveTo>().MoveToGoal();
     }
 
@@ -90,11 +108,23 @@ public class EnnemieMoveScript : MonoBehaviour
         MoveAround();
     }
 
+    private void Guard()
+    {
+        if (!nMagent.hasPath)
+        {
+            gameObject.transform.Rotate(0, 0.3f, 0);
+            Invoke("SwitchToIdle", 3);
+        }
+        else
+        {
+            CancelInvoke();
+        }
+    }
+
     private void MoveAround()
     {
         if (!nMagent.hasPath)
         {
-            Debug.Log(WaypointList.Count);
             int ind = Random.Range(0, WaypointList.Count);
             while(lastPoint == ind || preLastPoint == ind)
             {
@@ -103,7 +133,7 @@ public class EnnemieMoveScript : MonoBehaviour
             preLastPoint = lastPoint;
             lastPoint = ind;
             
-            Debug.Log("-> " + preLastPoint + " ---- " + lastPoint);
+            //Debug.Log("-> " + preLastPoint + " ---- " + lastPoint);
                     
             Transform dest = WaypointScript.Waypoints[ind];
                     
@@ -114,7 +144,7 @@ public class EnnemieMoveScript : MonoBehaviour
 
     private void SwitchToIdle()
     {
-        if(_currentState == CurrentState.Search) _currentState = CurrentState.Idle;
+        if(_currentState == CurrentState.Search || _currentState == CurrentState.Guard) _currentState = CurrentState.Idle;
     }
 }
 
@@ -123,4 +153,5 @@ enum CurrentState
         Idle,
         Chase,
         Search,
+        Guard,
     }

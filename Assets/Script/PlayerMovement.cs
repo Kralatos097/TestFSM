@@ -8,12 +8,6 @@ public class PlayerMovement : MonoBehaviour
 {
     public int speed;
     public Rigidbody rbPlayer;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -33,10 +27,19 @@ public class PlayerMovement : MonoBehaviour
         {
             Death();
         }
+        else if(other.CompareTag("Finish"))
+        {
+            Victoire();
+        }
     }
 
     private void Death()
     {
         Debug.Log("Death");
+    }
+
+    private void Victoire()
+    {
+        Debug.Log("Victoire");
     }
 }
