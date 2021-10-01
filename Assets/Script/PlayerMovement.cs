@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public int speed;
     public Rigidbody rbPlayer;
+    public UIScript UIScript;
 
     // Update is called once per frame
     void Update()
@@ -36,10 +37,12 @@ public class PlayerMovement : MonoBehaviour
     private void Death()
     {
         Debug.Log("Death");
+        UIScript.Death();
     }
 
     private void Victoire()
     {
         Debug.Log("Victoire");
+        UIScript.Victoire();
     }
 }
