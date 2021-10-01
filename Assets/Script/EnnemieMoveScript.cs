@@ -31,7 +31,10 @@ public class EnnemieMoveScript : MonoBehaviour
                 Idle();
                 if (champDeVision.triggered == true)
                 {
-                    _currentState = CurrentState.Chase;
+                    if (!Physics.Linecast(transform.position, player.position, layerMask:3))
+                    {
+                        _currentState = CurrentState.Chase;
+                    }
                 }
                 break;
             
@@ -49,7 +52,7 @@ public class EnnemieMoveScript : MonoBehaviour
                 {
                     _currentState = CurrentState.Chase;
                 }
-                Invoke("SwitchToIdle", 10);
+                Invoke("SwitchToIdle", 5);
                 break;
         }
 
